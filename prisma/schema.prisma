@@ -1,0 +1,104 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String?
+  role         Role
+  isConfirmed  Boolean  @default(false)
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([email])
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  slug         String   @unique
+  name         String
+  desc         String?  @db.Text
+  categoryId   String
+  initialStock Int
+  buyingPrice  Float
+  sellingPrice Float
+  isDeleted    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  category     Category      @relation(fields: [categoryId], references: [id])
+  pictures     Picture[]
+  transactions Transaction[]
+
+  @@index([slug])
+}
+
+model Picture {
+  id        String   @id @default(uuid())
+  productId String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Transaction {
+  id        String    @id @default(uuid())
+  productId String
+  type      TransType
+  amount    Int
+  total     Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum TransType {
+  IN
+  OUT
+}
+
+model RecordModification {
+  id        String   @id @default(uuid())
+  desc      String
+  type      RecordType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum RecordType {
+  IN_TRANSACTION
+  OUT_TRANSACTION
+  CREATE_PRODUCT
+  EDIT_PRODUCT
+  DELETE_PRODUCT
+  REGISTER
+  WRONG_PASSWORD
+  ACCEPT_ACCOUNT
+  DECLINE_ACCOUNT
+}

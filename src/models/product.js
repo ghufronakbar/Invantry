@@ -65,7 +65,11 @@ class Product {
             include: {
                 category: true,
                 pictures: true,
-                transactions: true
+                transactions: {
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
+                }
             }
         })
     }

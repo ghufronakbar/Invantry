@@ -22,6 +22,13 @@ class Product {
                     },
                     categoryId ? { categoryId } : {}
                 ]
+            },
+            include: {
+                category: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
     }

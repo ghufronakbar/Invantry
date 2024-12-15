@@ -22,7 +22,7 @@ class ProductController {
                 if (service.message === "404") return res.status(404).json(Response.notFound());
                 return res.status(400).json(Response.invalid(service.message));
             }
-            return res.status(200).json(Response.ok(service));
+            return res.status(200).json(Response.ok("Berhasil mengambil data produk", service));
         } catch (error) {
             console.log(error);
             return res.status(500).json(Response.error());

@@ -32,12 +32,12 @@ class ProductService {
                     product.currentStock -= transaction.amount;
                     product.income += transaction.total;
                     product.totalProductOut += transaction.amount;
-                    product.totalTransactionOut += 1
+                    product.totalTransactionIn += 1
                 } else {
                     product.currentStock += transaction.amount;
                     product.outcome += transaction.total;
                     product.totalProductIn += transaction.amount;
-                    product.totalTransactionIn += 1
+                    product.totalTransactionOut += 1
                 }
 
             }
@@ -62,12 +62,12 @@ class ProductService {
                 product.currentStock -= transaction.amount;
                 product.income += transaction.total;
                 product.totalProductOut += transaction.amount;
-                product.totalTransactionOut += 1
+                product.totalTransactionIn += 1
             } else {
                 product.currentStock += transaction.amount;
                 product.outcome += transaction.total;
                 product.totalProductIn += transaction.amount;
-                product.totalTransactionIn += 1
+                product.totalTransactionOut += 1
             }
 
         }

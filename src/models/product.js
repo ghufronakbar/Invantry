@@ -28,6 +28,12 @@ class Product {
                     select: {
                         name: true
                     }
+                },
+                pictures: {
+                    select: {
+                        url: true
+                    },
+                    take: 1
                 }
             }
         })

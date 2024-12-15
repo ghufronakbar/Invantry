@@ -34,6 +34,9 @@ class Category {
         return await prisma.category.findMany({
             where: {
                 isDeleted: false
+            },
+            orderBy: {
+                name: 'asc'
             }
         })
     }
@@ -64,6 +67,24 @@ class Category {
             },
             data: {
                 isDeleted: true
+            }
+        })
+    }
+
+    static countProduct = async () => {
+        return await prisma.category.findMany({
+            select: {
+                id: true,
+                name: true,
+                _count: {
+                    select: {
+                        products: {
+                            where: {
+                                isDeleted: false
+                            }
+                        }
+                    }
+                }
             }
         })
     }

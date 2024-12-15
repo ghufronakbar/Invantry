@@ -89,6 +89,80 @@ class Transaction {
             }
         })
     }
+
+    static async inTransactionLastTwelve() {
+        const lastTwelveMonths = new Date();
+        lastTwelveMonths.setMonth(lastTwelveMonths.getMonth() - 12);
+
+        return await prisma.transaction.findMany({
+            select: {
+                amount: true,
+                total: true,
+                createdAt: true,
+                product: {
+                    select: {
+                        id: true,
+                        name: true,
+                        category: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                AND: [
+                    {
+                        type: "IN"
+                    },
+                    {
+                        createdAt: {
+                            gte: lastTwelveMonths
+                        }
+                    }
+                ]
+            }
+        });
+    }
+
+    static async outTransactionLastTwelve() {
+        const lastTwelveMonths = new Date();
+        lastTwelveMonths.setMonth(lastTwelveMonths.getMonth() - 12);
+
+        return await prisma.transaction.findMany({
+            select: {
+                amount: true,
+                total: true,
+                createdAt: true,
+                product: {
+                    select: {
+                        id: true,
+                        name: true,
+                        category: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                AND: [
+                    {
+                        type: "OUT"
+                    },
+                    {
+                        createdAt: {
+                            gte: lastTwelveMonths
+                        }
+                    }
+                ]
+            }
+        });
+    }
 }
 
 export default Transaction

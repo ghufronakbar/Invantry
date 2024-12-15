@@ -1,9 +1,9 @@
 import express from "express";
 import ProductController from "./product.controller.js";
 const router = express.Router();
-import decodedResponse from "../../../middleware/decodedResponse.js";
-import verification from "../../../middleware/verification.js";
-import Cloudinary from "../../../utils/cloudinary.js";
+import decodedResponse from "../../middleware/decodedResponse.js";
+import verification from "../../middleware/verification.js";
+import Cloudinary from "../../utils/cloudinary.js";
 
 router.get("/", verification(["SUPER_ADMIN", "ADMIN"]), decodedResponse, ProductController.all);
 router.delete("/pictures", verification(["SUPER_ADMIN"]), decodedResponse, ProductController.deletePictures);

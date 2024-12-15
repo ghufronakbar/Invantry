@@ -1,20 +1,20 @@
-import Product from "../../../models/product.js";
-import User from "../../../models/user.js";
-import paginate from "../../../helper/paginate.js";
-import Category from "../../../models/category.js";
-import RecordModification from "../../../models/recordModification.js";
-import Cloudinary from "../../../utils/cloudinary.js";
-import Picture from "../../../models/picture.js";
-import Transaction from "../../../models/transaction.js";
+import Product from "../../models/product.js";
+import User from "../../models/user.js";
+import paginate from "../../helper/paginate.js";
+import Category from "../../models/category.js";
+import RecordModification from "../../models/recordModification.js";
+import Cloudinary from "../../utils/cloudinary.js";
+import Picture from "../../models/picture.js";
+import Transaction from "../../models/transaction.js";
 
 class ProductService {
-    static async all(search = "", page = 1) {
+    static async all(search = "", page = 1, categoryId = undefined) {
         if (isNaN(Number(page)) || Number(page) < 1) {
             return new Error("Page harus angka")
         }
         const [products, counts] = await Promise.all([
-            Product.all(search, Number(page)),
-            Product.count(search)
+            Product.all(search, Number(page), categoryId),
+            Product.count(search, categoryId),
         ]);
         const productIds = products.map(product => product.id)
         const transactions = await Transaction.byProductIds(productIds)

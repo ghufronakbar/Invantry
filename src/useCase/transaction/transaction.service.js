@@ -1,8 +1,8 @@
-import paginate from "../../../helper/paginate.js";
-import Transaction from "../../../models/transaction.js";
-import Product from "../../../models/product.js";
-import User from "../../../models/user.js";
-import RecordModification from "../../../models/recordModification.js";
+import paginate from "../../helper/paginate.js";
+import Transaction from "../../models/transaction.js";
+import Product from "../../models/product.js";
+import User from "../../models/user.js";
+import RecordModification from "../../models/recordModification.js";
 
 class TransactionService {
     static async all(search = "", page = 1, type = "ALL") {

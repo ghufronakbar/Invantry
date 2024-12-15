@@ -3,7 +3,7 @@ import prisma from '../db/prisma.js'
 const TAKE = 10
 
 class Product {
-    static async all(search = "", page = 1) {
+    static async all(search = "", page = 1, categoryId = undefined) {
         return await prisma.product.findMany({
             orderBy: {
                 createdAt: 'desc'
@@ -19,13 +19,14 @@ class Product {
                     },
                     {
                         isDeleted: false
-                    }
+                    },
+                    categoryId ? { categoryId } : {}
                 ]
             }
         })
     }
 
-    static async count(search) {
+    static async count(search, categoryId) {
         return await prisma.product.count({
             where: {
                 AND: [
@@ -36,7 +37,8 @@ class Product {
                     },
                     {
                         isDeleted: false
-                    }
+                    },
+                    categoryId ? { categoryId } : {}
                 ]
             }
         })

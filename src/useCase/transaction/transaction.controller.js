@@ -1,10 +1,10 @@
-import Response from "../../../helper/response.js";
+import Response from "../../helper/response.js";
 import TransactionService from "./transaction.service.js";
 
 class TransactionController {
     static async all(req, res) {
         try {
-            const service = await TransactionService.all(req.query.search, req.query.page, req.query.type);
+            const service = await TransactionService.all(req.query.search || "", req.query.page || 1, req.query.type);
             if (service instanceof Error) {
                 return res.status(400).json(Response.invalid(service.message));
             }

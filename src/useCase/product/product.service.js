@@ -23,13 +23,17 @@ class ProductService {
             product.currentStock = product.initialStock;
             product.income = 0
             product.outcome = 0
+            product.totalProductIn = 0;
+            product.totalProductOut = 0;
             for (const transaction of filteredTransaction) {
                 if (transaction.type === "IN") {
                     product.currentStock -= transaction.amount;
                     product.income += transaction.total;
+                    product.totalProductOut += 1;
                 } else {
                     product.currentStock += transaction.amount;
                     product.outcome += transaction.total;
+                    product.totalProductIn += 1;
                 }
 
             }
@@ -45,13 +49,17 @@ class ProductService {
         product.currentStock = product.initialStock;
         product.income = 0
         product.outcome = 0
+        product.totalProductIn = 0;
+        product.totalProductOut = 0;
         for (const transaction of product.transactions) {
             if (transaction.type === "IN") {
                 product.currentStock -= transaction.amount;
                 product.income += transaction.total;
+                product.totalProductOut += 1;
             } else {
                 product.currentStock += transaction.amount;
                 product.outcome += transaction.total;
+                product.totalProductIn += 1;
             }
 
         }

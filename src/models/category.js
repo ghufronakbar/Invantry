@@ -35,6 +35,10 @@ class Category {
             where: {
                 isDeleted: false
             },
+            select: {
+                id: true,
+                name: true
+            },
             orderBy: {
                 name: 'asc'
             }

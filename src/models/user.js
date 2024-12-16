@@ -91,6 +91,18 @@ class User {
     static async setActive(id, isActived) {
         return await prisma.user.update({ where: { id }, data: { isActived } })
     }
+
+    static async edit(id, data) {
+        return await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                name: data.name,
+                email: data.email,
+            }
+        })
+    }
 }
 
 export default User;

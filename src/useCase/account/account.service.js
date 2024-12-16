@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../../constant/index.js";
 
-class AuthService {
+class AccountService {
     static async login(data) {
         const { email, password } = data
         if (!email || !password) {
@@ -88,6 +88,30 @@ class AuthService {
             throw new Error("401")
         }
     }
+
+    static async byDecoded(id) {
+        const user = await User.byId(id)
+        if (!user) {
+            return new Error("404")
+        }
+        return user
+    }
+
+    static async edit(id, data) {
+        const { name, email } = data
+        if (!name || !email) {
+            return new Error("Semua field harus diisi")
+        }
+        const user = await User.byId(id)
+        const userByEmail = await User.byEmail(email)
+        if (!user) {
+            return new Error("404")
+        }
+        if (userByEmail && userByEmail.id !== id) {
+            return new Error("Email sudah terdaftar")
+        }        
+        return await User.edit(id, data)
+    }
 }
 
-export default AuthService
+export default AccountService

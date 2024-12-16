@@ -163,6 +163,109 @@ class Transaction {
             }
         });
     }
+
+    static #twelveMonthAgo() {
+        const lastTwelveMonths = new Date();
+        lastTwelveMonths.setMonth(lastTwelveMonths.getMonth() - 12);
+        return lastTwelveMonths
+    }
+
+    static #oneMonthAgo() {
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        return oneMonthAgo
+    }
+
+    static #firstDateOfThisMonth() {
+        const now = new Date();
+        const firstDateOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        return firstDateOfThisMonth
+    }
+
+    static async annually() {
+        return await prisma.transaction.findMany({
+            select: {
+                amount: true,
+                total: true,
+                createdAt: true,
+                type: true,
+                product: {
+                    select: {
+                        name: true,
+                        category: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                createdAt: {
+                    gte: this.#twelveMonthAgo()
+                }
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        })
+    }
+
+    static async thisMonth() {
+        return await prisma.transaction.findMany({
+            select: {
+                amount: true,
+                total: true,
+                createdAt: true,
+                type: true,
+                product: {
+                    select: {
+                        name: true,
+                        category: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                createdAt: {
+                    gte: this.#firstDateOfThisMonth()
+                }
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        })
+    }
+
+    static async byProductId(id) {
+        return await prisma.transaction.findMany({
+            select: {
+                amount: true,
+                total: true,
+                createdAt: true,
+                type: true,
+                product: {
+                    select: {
+                        name: true,
+                        category: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                productId: id
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        })
+    }
 }
 
 export default Transaction

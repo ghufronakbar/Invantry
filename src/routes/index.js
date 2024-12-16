@@ -6,6 +6,7 @@ import category from '../useCase/category/index.js'
 import dashboard from '../useCase/dashboard/index.js'
 import record from '../useCase/record/index.js'
 import user from '../useCase/user/index.js'
+import report from '../useCase/report/index.js'
 const router = express.Router();
 
 router.use('/account', account);
@@ -15,5 +16,6 @@ router.use('/transactions', transaction);
 router.use('/dashboard', dashboard);
 router.use('/records', record);
 router.use('/users', user);
+router.use('/report', report);
 
 export default router

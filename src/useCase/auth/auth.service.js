@@ -17,6 +17,9 @@ class AuthService {
         if (!user.isConfirmed) {
             return new Error("Pengguna belum terkonfirmasi")
         }
+        if (!user.isActived) {
+            return new Error("Pengguna ditangguhkan")
+        }
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
             return new Error("Password salah")

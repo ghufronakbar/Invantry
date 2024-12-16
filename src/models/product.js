@@ -14,7 +14,8 @@ class Product {
                 AND: [
                     {
                         name: {
-                            contains: search
+                            contains: search,
+                            mode: 'insensitive'
                         }
                     },
                     {

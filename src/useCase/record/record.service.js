@@ -2,7 +2,7 @@ import paginate from "../../helper/paginate.js";
 import RecordModification from "../../models/recordModification.js";
 
 const VALID_RECORD_TYPE_ADMIN = ["IN_TRANSACTION", "OUT_TRANSACTION", "CREATE_PRODUCT", "EDIT_PRODUCT", "DELETE_PRODUCT"];
-const VALID_RECORD_TYPE_SUPER_ADMIN = [...VALID_RECORD_TYPE_ADMIN, "REGISTER", "ACCOUNT_CONFIRMED"];
+const VALID_RECORD_TYPE_SUPER_ADMIN = [...VALID_RECORD_TYPE_ADMIN, "REGISTER", "ACCOUNT_CONFIRMED", "ACCOUNT_RESTORED", "ACCOUNT_BANNED"];
 
 class RecordService {
     static async all(role, page = 1, type = undefined) {
@@ -28,11 +28,11 @@ class RecordService {
     }
 
     static async byId(role, id) {
-        const product = await RecordModification.byId(id)
-        if (!product) return new Error("404")
-        if (product.isDeleted) return new Error("404")
-        if (role === "ADMIN" && !VALID_RECORD_TYPE_ADMIN.includes(product.type)) return new Error("404")
-        return product
+        const record = await RecordModification.byId(id)
+        if (!record) return new Error("404")
+        if (record.isDeleted) return new Error("404")
+        if (role === "ADMIN" && !VALID_RECORD_TYPE_ADMIN.includes(record.type)) return new Error("404")
+        return record
     }
 }
 

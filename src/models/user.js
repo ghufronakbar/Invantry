@@ -1,11 +1,13 @@
 import prisma from '../db/prisma.js'
 
+const TAKE = 10
+
 class User {
 
-    static async all() {
+    static async all(search = "", page = 1) {
         return await prisma.user.findMany({
             orderBy: {
-                createdAt: 'desc'
+                name: 'asc'
             },
             select: {
                 id: true,
@@ -13,7 +15,30 @@ class User {
                 email: true,
                 role: true,
                 isConfirmed: true,
+                isActived: true,
                 createdAt: true,
+            },
+            take: TAKE,
+            skip: (page - 1) * TAKE,
+            where: {
+                name: {
+                    contains: search,
+                    mode: 'insensitive'
+                }
+            }
+        })
+    }
+
+    static async count(search = "") {
+        return await prisma.user.count({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            where: {
+                name: {
+                    contains: search,
+                    mode: 'insensitive'
+                }
             }
         })
     }
@@ -41,6 +66,10 @@ class User {
 
     static async refresh(id, refreshToken) {
         return await prisma.user.update({ where: { id }, data: { refreshToken } })
+    }
+
+    static async setActive(id, isActived) {
+        return await prisma.user.update({ where: { id }, data: { isActived } })
     }
 }
 

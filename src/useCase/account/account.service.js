@@ -110,7 +110,23 @@ class AccountService {
         if (userByEmail && userByEmail.id !== id) {
             return new Error("Email sudah terdaftar")
         }
-        return await User.edit(id, data)
+        const payload = {
+            id: user.id,
+            email: email,
+            role: user.role,
+        }
+
+        const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" })
+        const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" })
+        User.refresh(user.id, refreshToken)
+        const updated = await User.edit(id, data)
+        const result = {
+            ...updated,
+            accessToken,
+            refreshToken,
+            type: "Bearer"
+        }
+        return result
     }
 
     static async editPicture(id, picture) {

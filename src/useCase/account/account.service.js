@@ -109,8 +109,27 @@ class AccountService {
         }
         if (userByEmail && userByEmail.id !== id) {
             return new Error("Email sudah terdaftar")
-        }        
+        }
         return await User.edit(id, data)
+    }
+
+    static async editPicture(id, picture) {
+        const user = await User.byId(id)
+        if (!picture || !picture?.path) {
+            return new Error("Semua field harus diisi")
+        }
+        if (!user) {
+            return new Error("404")
+        }
+        return await User.editPicture(id, picture.path)
+    }
+
+    static async deletePicture(id) {
+        const user = await User.byId(id)
+        if (!user) {
+            return new Error("404")
+        }
+        return await User.editPicture(id, null)
     }
 }
 

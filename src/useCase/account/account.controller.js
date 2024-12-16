@@ -70,6 +70,34 @@ class AccountController {
             return res.status(500).json(Response.error());
         }
     }
+
+    static async editPicture(req, res) {
+        try {
+            const service = await AccountService.editPicture(req?.decoded?.id, req.file);
+            if (service instanceof Error) {
+                if (service.message === "404") return res.status(404).json(Response.notFound());
+                return res.status(400).json(Response.invalid(service.message));
+            }
+            return res.status(200).json(Response.ok("Berhasil mengedit foto profile", service));
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(Response.error());
+        }
+    }
+
+    static async deletePicture(req, res) {
+        try {
+            const service = await AccountService.deletePicture(req?.decoded?.id);
+            if (service instanceof Error) {
+                if (service.message === "404") return res.status(404).json(Response.notFound());
+                return res.status(400).json(Response.invalid(service.message));
+            }
+            return res.status(200).json(Response.ok("Berhasil menghapus foto profile", service));
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(Response.error());
+        }
+    }
 }
 
 export default AccountController

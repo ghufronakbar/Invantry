@@ -103,6 +103,17 @@ class User {
             }
         })
     }
+
+    static async editPicture(id, picture) {
+        return await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                picture
+            }
+        })
+    }
 }
 
 export default User;

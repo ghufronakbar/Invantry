@@ -105,8 +105,7 @@ class RecordModification {
                     },
                     type ? {
                         type: {
-                            equals: type,
-                            mode: 'insensitive'
+                            equals: type,                            
                         }
                     } : {}
                 ]
@@ -129,8 +128,7 @@ class RecordModification {
                     },
                     type ? {
                         type: {
-                            equals: type,
-                            mode: 'insensitive'
+                            equals: type,                            
                         }
                     } : {}
                 ]

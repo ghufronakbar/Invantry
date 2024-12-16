@@ -117,7 +117,7 @@ export const emailTemplate = (name, verificationLink, subject, content, isLink, 
     <div class="container">
         <div class="email-content">
             <div class="email-header">
-                <img src="https://i.ibb.co.com/fkRRZrP/LOGO-WIKA.png" alt="Wika Beton">
+                <img src="https://res.cloudinary.com/dga0wmldp/image/upload/v1734363373/invantry/static/bhubbqg95ncv2adyowum.png" alt="Inventra">
             </div>
             <div class="email-body">
                 <h1>Halo ${name}!</h1>

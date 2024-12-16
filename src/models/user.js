@@ -4,7 +4,7 @@ const TAKE = 10
 
 class User {
 
-    static async all(search = "", page = 1) {
+    static async all(search = "", page = 1, type = undefined) {
         return await prisma.user.findMany({
             orderBy: {
                 name: 'asc'
@@ -23,24 +23,42 @@ class User {
             take: TAKE,
             skip: (page - 1) * TAKE,
             where: {
-                name: {
-                    contains: search,
-                    mode: 'insensitive'
-                }
+                AND: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: 'insensitive'
+                        },
+                    },
+                    type ? {
+                        role: {
+                            equals: type
+                        }
+                    } : {}
+                ]
             }
         })
     }
 
-    static async count(search = "") {
+    static async count(search = "", type = undefined) {
         return await prisma.user.count({
             orderBy: {
                 createdAt: 'desc'
             },
             where: {
-                name: {
-                    contains: search,
-                    mode: 'insensitive'
-                }
+                AND: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: 'insensitive'
+                        },
+                    },
+                    type ? {
+                        role: {
+                            equals: type
+                        }
+                    } : {}
+                ]
             }
         })
     }

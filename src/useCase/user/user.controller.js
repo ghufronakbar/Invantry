@@ -4,7 +4,7 @@ import UserService from "./user.service.js";
 class UserController {
     static async all(req, res) {
         try {
-            const service = await UserService.all(req.query.search || "", req.query.page);
+            const service = await UserService.all(req.query.search || "", req.query.page || 1, req.query.type);
             if (service instanceof Error) {
                 return res.status(400).json(Response.invalid(service.message));
             }

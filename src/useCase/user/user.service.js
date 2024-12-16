@@ -3,13 +3,25 @@ import RecordModification from "../../models/recordModification.js";
 import User from "../../models/user.js";
 
 class UserService {
-    static async all(search = "", page = 1) {
+    static async all(search = "", page = 1, type = undefined) {
         if (isNaN(Number(page)) || Number(page) < 1) {
             return new Error("Page harus angka")
         }
+
+        let filteredType = undefined;
+        switch (type) {
+            case "ADMIN":
+                filteredType = "ADMIN"
+                break;
+            case "SUPER_ADMIN":
+                filteredType = "SUPER_ADMIN"
+                break;
+            default:
+                break;
+        }
         const [users, counts] = await Promise.all([
-            User.all(search, Number(page)),
-            User.count(search),
+            User.all(search, Number(page), filteredType),
+            User.count(search, filteredType),
         ]);
         const pagination = paginate(page, users.length, counts)
         return { users, pagination }

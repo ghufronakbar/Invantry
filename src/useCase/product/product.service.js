@@ -20,7 +20,7 @@ class ProductService {
         const transactions = await Transaction.byProductIds(productIds)
         for (const product of products) {
             const filteredTransaction = transactions.filter(transaction => transaction.productId === product.id)
-            product.currentStock = product.initialStock;
+            product.currentStock = 0;
             product.income = 0
             product.outcome = 0
             product.totalProductIn = 0;
@@ -50,7 +50,7 @@ class ProductService {
         const product = await Product.bySlug(slug)
         if (!product) return new Error("404")
         if (product.isDeleted) return new Error("404")
-        product.currentStock = product.initialStock;
+        product.currentStock = 0;
         product.income = 0
         product.outcome = 0
         product.totalProductIn = 0;

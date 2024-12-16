@@ -114,7 +114,7 @@ class RecordModification {
         })
     }
 
-    static async count(type = undefined) {
+    static async count(search = "", type = undefined) {
         return await prisma.recordModification.count({
             orderBy: {
                 createdAt: 'desc'

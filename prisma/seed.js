@@ -2,8 +2,12 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
-const seedsUser = async () => {
-    const user = await prisma.user.findFirst();
+const seedSuperAdmin = async () => {
+    const user = await prisma.user.findFirst({
+        where: {
+            role: "SUPER_ADMIN"
+        }
+    });
     if (!user) {
         console.log("Seeding admin...");
         await prisma.user.createMany({
@@ -13,6 +17,32 @@ const seedsUser = async () => {
                     email: "alan.040219.gam@gmail.com",
                     role: "SUPER_ADMIN",
                     isConfirmed: true,
+                    isActived: true,
+                    password: await bcrypt.hash("12345678", 10),
+                }
+            ]
+        });
+    } else {
+        console.log("Admin already exists");
+    }
+}
+
+const seedAdmin = async () => {
+    const user = await prisma.user.findFirst({
+        where: {
+            role: "ADMIN"
+        }
+    });
+    if (!user) {
+        console.log("Seeding admin...");
+        await prisma.user.createMany({
+            data: [
+                {
+                    name: "Ghufron Akbar",
+                    email: "lanstheprodigy@gmail.com",
+                    role: "ADMIN",
+                    isConfirmed: true,
+                    isActived: true,
                     password: await bcrypt.hash("12345678", 10),
                 }
             ]
@@ -23,6 +53,7 @@ const seedsUser = async () => {
 }
 
 const seedProduct1 = async () => {
+    return;
     console.log("Seeding product...");
     const date = new Date();
     const product = await prisma.product.create({
@@ -44,6 +75,7 @@ const seedProduct1 = async () => {
 }
 
 const seedProduct2 = async () => {
+    return;
     console.log("Seeding product...");
     const date = new Date();
     const product = await prisma.product.create({
@@ -65,22 +97,30 @@ const seedProduct2 = async () => {
 }
 
 const seedTransactions = async (productId) => {
-    console.log(`Seeding transactions... for id ${productId}`);
-    const transactions = [];
-    for (let i = 0; i < 20; i++) {
-        const randomDate = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28));
-        transactions.push({
-            type: i % 2 === 0 ? "IN" : "OUT",
-            amount: Math.floor(Math.random() * 20) + 1,
-            total: Math.floor(Math.random() * 100000) + 10000,
-            productId: productId,
-            createdAt: randomDate,
-            updatedAt: randomDate,
+    return;
+    const check = await prisma.transaction.findMany({ where: { productId } });
+    if (check.length > 0) {
+        console.log("Transactions already seeded");
+        return
+    } else {
+        console.log(`Seeding transactions... for id ${productId}`);
+        const transactions = [];
+        for (let i = 0; i < 20; i++) {
+            const randomDate = new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28));
+            transactions.push({
+                type: i % 2 === 0 ? "IN" : "OUT",
+                amount: Math.floor(Math.random() * 20) + 1,
+                total: Math.floor(Math.random() * 100000) + 10000,
+                productId: productId,
+                createdAt: randomDate,
+                updatedAt: randomDate,
+            });
+        }
+        await prisma.transaction.createMany({
+            data: transactions
         });
+
     }
-    await prisma.transaction.createMany({
-        data: transactions
-    });
     console.log("Transactions seeded successfully");
 }
 
@@ -88,9 +128,10 @@ const seedTransactions = async (productId) => {
 const main = async () => {
     try {
         await prisma.$connect();
-        await seedsUser();
-        const [product1, product2] = await Promise.all([seedProduct1(), seedProduct2()]);
-        await Promise.all([seedTransactions(product1.id), seedTransactions(product2.id)]);
+        await seedSuperAdmin();
+        await seedAdmin();
+        // const [product1, product2] = await Promise.all([seedProduct1(), seedProduct2()]);
+        // await Promise.all([seedTransactions(product1.id), seedTransactions(product2.id)]);
     } catch (error) {
         console.error(error);
         process.exit(1);

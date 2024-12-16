@@ -15,6 +15,7 @@ model User {
   role         Role
   isConfirmed  Boolean  @default(false)
   isActived    Boolean  @default(false)
+  picture      String?
   refreshToken String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

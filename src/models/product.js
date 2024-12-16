@@ -84,7 +84,14 @@ class Product {
                 categoryId: data.categoryId,
                 initialStock: data.initialStock,
                 buyingPrice: data.buyingPrice,
-                sellingPrice: data.sellingPrice
+                sellingPrice: data.sellingPrice,
+                transactions: {
+                    create: {
+                        amount: data.initialStock,
+                        total: data.initialStock * data.buyingPrice,
+                        type: "OUT",
+                    }
+                }
             },
             include: {
                 category: true

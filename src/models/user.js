@@ -76,6 +76,7 @@ class User {
                 email: data.email,
                 role: "ADMIN",
                 isConfirmed: false,
+                isActived: false,
             }
         })
     }
@@ -111,6 +112,21 @@ class User {
             },
             data: {
                 picture
+            }
+        })
+    }
+
+    static async delete(id) {
+        return await prisma.user.delete({ where: { id } })
+    }
+
+    static async updatePassword(id, password) {
+        return await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                password
             }
         })
     }

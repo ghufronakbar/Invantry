@@ -13,6 +13,7 @@ router.get('/profile', verification(["SUPER_ADMIN", "ADMIN"]), decodedResponse, 
 router.put('/profile', verification(["SUPER_ADMIN", "ADMIN"]), decodedResponse, AccountController.edit)
 router.patch('/profile', verification(["SUPER_ADMIN", "ADMIN"]), decodedResponse, Cloudinary.upload("profile").single("picture"), AccountController.editPicture)
 router.delete('/profile', verification(["SUPER_ADMIN", "ADMIN"]), decodedResponse, AccountController.deletePicture)
+router.get('/confirm/:token', AccountController.confirm)
 
 
 export default router

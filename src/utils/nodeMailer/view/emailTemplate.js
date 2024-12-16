@@ -6,7 +6,7 @@ export const emailTemplate = (name, verificationLink, subject, content, isLink, 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="./icon-wika.png">
-    <title>Wika Beton Email</title>
+    <title>${subject}</title>
     <style>
         body {
             font-family: sans-serif;
@@ -122,7 +122,7 @@ export const emailTemplate = (name, verificationLink, subject, content, isLink, 
             <div class="email-body">
                 <h1>Halo ${name}!</h1>
                 <div class="email-text">
-                    <p>Terima kasih telah menggunakan layanan <strong>SIGAP SIPOLES</strong></p>
+                    <p>Terima kasih telah menggunakan layanan <strong>INVENTRA</strong></p>
                     <p>${subject}</p>
                 </div>
                 ${isPassword ?
@@ -140,9 +140,9 @@ export const emailTemplate = (name, verificationLink, subject, content, isLink, 
                 <p>Jika anda punya pertanyaan, silahkan
                     <a href="tel:082230123456">hubungi kami</a>
                     atau email ke
-                    <a href="mailto:sigapsipoles@gmail.com">sigapsipoles@gmail.com</a>
+                    <a href="mailto:inventra@gmail.com">inventra@gmail.com</a>
                 </p>
-                <p>Surabaya, Jawa Timur, Indonesia</p>
+                <p>Sleman, Yogyakarta, Indonesia</p>
             </div>
         </div>
     </div>

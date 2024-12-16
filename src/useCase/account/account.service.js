@@ -2,7 +2,9 @@ import User from "../../models/user.js";
 import RecordModification from "../../models/recordModification.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { JWT_SECRET } from "../../constant/index.js";
+import { BASE_URL_API, JWT_SECRET } from "../../constant/index.js";
+import sendEmail from "../../utils/nodeMailer/sendEmail.js";
+import randomCharacter from "../../utils/randomCharacter.js";
 
 class AccountService {
     static async login(data) {
@@ -57,8 +59,18 @@ class AccountService {
         if (check && !check.isConfirmed) {
             return new Error("Pengguna belum terkonfirmasi")
         }
-        RecordModification.register(user.name, name, email)
-        return await User.create(data)
+        const newUser = await User.create(data)
+        const token = jwt.sign({ id: newUser.id }, JWT_SECRET, { expiresIn: "1d" })
+        const url = `${BASE_URL_API}/api/account/confirm/${token}`
+        console.log(url);
+        const send = await sendEmail(email, "CREATE_ACCOUNT", url, name)
+        if (send instanceof Error) {
+            User.delete(newUser.id)
+            return new Error(send.message)
+        } else {
+            RecordModification.register(user.name, name, email)
+            return newUser
+        }
     }
 
     static async refresh(refreshToken) {
@@ -146,6 +158,43 @@ class AccountService {
             return new Error("404")
         }
         return await User.editPicture(id, null)
+    }
+
+    static async confirm(token) {
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET)
+            const user = await User.byId(decoded?.id)
+            if (!user) {
+                return new Error("Pengguna tidak ditemukan")
+            }
+            if (user.isConfirmed || user.password) {
+                return new Error("Pengguna sudah terkonfirmasi")
+            } else {
+                const randomPassword = randomCharacter(10)
+                const password = await bcrypt.hash(randomPassword, 10)
+                await Promise.all([
+                    User.updatePassword(user.id, password),
+                    sendEmail(user.email, "CONFIRM_ACCOUNT", "", user.name, randomPassword),
+                    User.setActive(user.id)
+                ])
+                RecordModification.accountConfirmed(user.name, user.email)
+                return "Pengguna berhasil terkonfirmasi, cek email untuk login"
+            }
+        } catch (error) {
+            if (error instanceof jwt.TokenExpiredError) {
+                if (error.message === "jwt expired") {
+                    return new Error("Link kadaluarsa")
+                }
+                if (error.message === "jwt malformed") {
+                    return new Error("Link kadaluarsa")
+                }
+                if (error.message === "invalid signature") {
+                    return new Error("Link tidak valid")
+                }
+            } else {
+                return new Error("Token tidak valid")
+            }
+        }
     }
 }
 

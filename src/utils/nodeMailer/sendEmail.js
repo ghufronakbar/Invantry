@@ -8,69 +8,23 @@ const sendEmail = async (to, type, link, name, PASSWORD = '') => {
     let isLink = true;
     let isPassword = false;
 
-    switch (type) {
-        case 'REJECT_ADMIN':
-            message = 'Mohon maaf, akun anda ditolak';
-            content = 'Silahkan hubungi admin';
-            subject = 'Informasi Pembuatan Akun Sigap Si Poles';
-            isLink = false;
-            break;
-        case 'DELETE_ADMIN':
-            message = 'Akun anda telah dihapus';
-            content = 'Silahkan hubungi admin';
-            subject = 'Informasi Hapus Akun Sigap Si Poles';
-            isLink = false;
-            break;
-        case 'APPROVE_ADMIN':
+    switch (type) {       
+        case 'CONFIRM_ACCOUNT':
             message = 'Akun anda telah diterima. Silahkan login dengan password berikut! ';
             content = PASSWORD;
-            subject = 'Informasi Terima Akun Sigap Si Poles';
+            subject = 'Informasi Terima Akun Inventra';
             isLink = false;
             isPassword = true;
-
-            break;
-        case 'REJECT_USER':
-            message = 'Mohon maaf, akun anda ditolak';
-            content = 'Silahkan hubungi admin';
-            subject = 'Informasi Pembuatan Akun Sigap Si Poles';
-            isLink = false;
-            break;
-        case 'DELETE_DRIVER':
-            message = 'Akun anda telah dihapus';
-            content = 'Silahkan hubungi admin';
-            subject = 'Informasi Hapus Akun Sigap Si Poles';
-            isLink = false;
-            break;
-        case 'APPROVE_USER':
-            message = 'Akun anda telah diterima. Silahkan login dengan password berikut! ';
-            content = PASSWORD;
-            subject = 'Informasi Terima Akun Sigap Si Poles';
-            isLink = false;
-            isPassword = true;
-            break;
-        case 'RESET_PASSWORD':
-            message = 'Anda meminta untuk mereset kata sandi Anda';
-            content = 'Reset kata sandi Anda';
-            subject = 'Reset Password Sigap Si Poles';
+            break;        
+        case 'CREATE_ACCOUNT':
+            message = 'Untuk mengaktifkan akun anda, silahkan klik link berikut! ';
+            content = 'Konfirmasi Email';
+            subject = 'Konfirmasi Email Akun Baru Inventra';
             isLink = true;
-            break;
-        case 'NEW_PASSWORD':
-            message = 'Kata sandi Anda telah diubah. Silahkan login dengan password berikut!';
-            content = PASSWORD;
-            subject = 'Reset Password Sigap Si Poles';
-            isLink = false;
-            isPassword = true;
-            break;
-        case 'CREATE_VENDOR':
-            message = 'Akun anda telah diterima. Silahkan login dengan password berikut! ';
-            content = PASSWORD;
-            subject = 'Informasi Terima Akun Vendor Sigap Si Poles';
-            isLink = false;
-            isPassword = true;
             break;
         default:
             content = 'XXX';
-            subject = 'Informasi Sigap Si Poles';
+            subject = 'Informasi Inventra';
             isLink = false;
             break;
     }
@@ -78,7 +32,7 @@ const sendEmail = async (to, type, link, name, PASSWORD = '') => {
     const html = emailTemplate(name, link, message, content, isLink, isPassword);
 
     const msg = {
-        from: '"Sigap SiPoles" <main@sigapsipoles.com>',
+        from: '"Invantry" <main@invantry.com>',
         to,
         subject,
         html,

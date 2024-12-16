@@ -86,7 +86,6 @@ class ReportService {
     }
 
     static async byProductId(id) {
-        console.log({ id });
         const [product, transactions] = await Promise.all([
             Product.byId(id),
             Transaction.byProductId(id)

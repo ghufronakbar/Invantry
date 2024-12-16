@@ -105,7 +105,7 @@ class RecordModification {
                     },
                     type ? {
                         type: {
-                            equals: type,                            
+                            equals: type,
                         }
                     } : {}
                 ]
@@ -128,7 +128,7 @@ class RecordModification {
                     },
                     type ? {
                         type: {
-                            equals: type,                            
+                            equals: type,
                         }
                     } : {}
                 ]
@@ -138,6 +138,15 @@ class RecordModification {
 
     static async byId(id) {
         return await prisma.recordModification.findUnique({ where: { id } })
+    }
+
+    static async accountConfirmed(name, email) {
+        return await prisma.recordModification.create({
+            data: {
+                type: "ACCOUNT_CONFIRMED",
+                desc: `Akun ${name} dengan email ${email} telah dikonfirmasi`
+            }
+        })
     }
 }
 

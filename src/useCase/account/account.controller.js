@@ -98,6 +98,21 @@ class AccountController {
             return res.status(500).json(Response.error());
         }
     }
+
+    static async confirm(req, res) {
+        const { token } = req.params;
+        try {
+            const result = await AccountService.confirm(token);
+
+            if (result instanceof Error) {
+                return res.render('confirm', { message: result.message, success: false });
+            }
+
+            return res.render('confirm', { message: result, success: true });
+        } catch (error) {
+            return res.render('confirm', { message: "Terjadi kesalahan, coba lagi.", success: false });
+        }
+    }
 }
 
 export default AccountController

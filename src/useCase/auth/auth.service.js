@@ -39,19 +39,22 @@ class AuthService {
         return result
     }
 
-    static async register(data) {
+    static async register(userId, data) {
         const { name, email } = data
         if (!name || !email) {
             return new Error("Semua field harus diisi")
         }
-        const check = await User.checkByEmail(email)
+        const [check, user] = await Promise.all([
+            User.checkByEmail(email),
+            User.byId(userId),
+        ]);
         if (check) {
             return new Error("Email sudah terdaftar")
         }
         if (check && !check.isConfirmed) {
             return new Error("Pengguna belum terkonfirmasi")
         }
-        RecordModification.register(email)
+        RecordModification.register(user.name, name, email)
         return await User.create(data)
     }
 

@@ -1,19 +1,21 @@
 import prisma from '../db/prisma.js'
 
+const TAKE = 10
+
 class RecordModification {
-    static async register(email) {
+    static async register(admin, name, email) {
         return await prisma.recordModification.create({
             data: {
-                desc: `${email} melakukan registrasi akun`,
+                desc: `${admin} dengan menambahkan ${name}(${email}) sebagai pengguna baru`,
                 type: "REGISTER"
             }
         })
     }
 
-    static async createProduct(admin, name, category) {
+    static async createProduct(admin, name, category, initialStock, buyingPrice, sellingPrice) {
         return await prisma.recordModification.create({
             data: {
-                desc: `${admin} menambahakan produk ${name} (${category})`,
+                desc: `${admin} menambahakan produk ${name} (${category}) sejumlah ${initialStock} dengan harga beli ${this.#formatRupiah(buyingPrice)} dan harga jual ${this.#formatRupiah(sellingPrice)}`,
                 type: "CREATE_PRODUCT"
             }
         })
@@ -28,10 +30,10 @@ class RecordModification {
         })
     }
 
-    static async editProduct(admin, oldName, oldCategory, newName, newCategory) {
+    static async editProduct(admin, oldName, oldCategory, newName, newCategory, buyingPrice, sellingPrice) {
         return await prisma.recordModification.create({
             data: {
-                desc: `${admin} mengedit produk ${oldName} (${oldCategory}) menjadi ${newName} (${newCategory})`,
+                desc: `${admin} mengedit produk ${oldName} (${oldCategory}) menjadi ${newName} (${newCategory}) dengan harga beli ${this.#formatRupiah(buyingPrice)} dan harga jual ${this.#formatRupiah(sellingPrice)}`,
                 type: "EDIT_PRODUCT"
             }
         })
@@ -66,6 +68,38 @@ class RecordModification {
 
     static #formatRupiah(amount) {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+    }
+
+    static async all(page = 1, type = undefined) {
+        return await prisma.recordModification.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            take: TAKE,
+            skip: (page - 1) * TAKE,
+            where: type ? {
+                type: {
+                    equals: type
+                }
+            } : {}
+        })
+    }
+
+    static async count(type = undefined) {
+        return await prisma.recordModification.count({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            where: type ? {
+                type: {
+                    equals: type
+                }
+            } : {}
+        })
+    }
+
+    static async byId(id) {
+        return await prisma.recordModification.findUnique({ where: { id } })
     }
 }
 

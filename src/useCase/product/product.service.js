@@ -46,8 +46,8 @@ class ProductService {
         return { products, pagination }
     }
 
-    static async bySlug(id) {
-        const product = await Product.bySlug(id)
+    static async bySlug(slug) {
+        const product = await Product.bySlug(slug)
         if (!product) return new Error("404")
         if (product.isDeleted) return new Error("404")
         product.currentStock = product.initialStock;
@@ -86,7 +86,7 @@ class ProductService {
         ])
         if (!user) return new Error("404")
         const filteredData = { name, desc, categoryId: isExist?.id, initialStock: Number(initialStock), buyingPrice: Number(buyingPrice), sellingPrice: Number(sellingPrice) }
-        RecordModification.createProduct(user.name, name, category);
+        RecordModification.createProduct(user.name, name, category, Number(initialStock), Number(buyingPrice), Number(sellingPrice));
         if (isExist && isExist.isDeleted) {
             Category.restore(isExist.id)
             return await Product.create(filteredData)
@@ -114,7 +114,7 @@ class ProductService {
         if (!user) return new Error("404")
 
         const filteredData = { name, desc, categoryId: isExist?.id, buyingPrice: Number(buyingPrice), sellingPrice: Number(sellingPrice) }
-        RecordModification.editProduct(user.name, product.name, product.category.name, name, category,);
+        RecordModification.editProduct(user.name, product.name, product.category.name, name, category, Number(buyingPrice), Number(sellingPrice));
         if (isExist && isExist.isDeleted) {
             Category.restore(isExist.id)
             return await Product.edit(slug, filteredData)

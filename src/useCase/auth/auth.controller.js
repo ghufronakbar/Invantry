@@ -17,11 +17,11 @@ class AuthController {
 
     static async register(req, res) {
         try {
-            const service = await AuthService.register(req.body);
+            const service = await AuthService.register(req?.decoded?.id, req.body);
             if (service instanceof Error) {
                 return res.status(400).json(Response.invalid(service.message));
             }
-            return res.status(200).json(Response.ok("Berhasil melakukan registrasi, tunggu konfirmasi admin", service));
+            return res.status(200).json(Response.ok("Berhasil melakukan registrasi", service));
         } catch (error) {
             console.log(error);
             return res.status(500).json(Response.error());

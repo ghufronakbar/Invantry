@@ -5,7 +5,7 @@ const VALID_RECORD_TYPE_ADMIN = ["IN_TRANSACTION", "OUT_TRANSACTION", "CREATE_PR
 const VALID_RECORD_TYPE_SUPER_ADMIN = [...VALID_RECORD_TYPE_ADMIN, "REGISTER", "ACCOUNT_CONFIRMED", "ACCOUNT_RESTORED", "ACCOUNT_BANNED"];
 
 class RecordService {
-    static async all(role, page = 1, type = undefined) {
+    static async all(role, search = "", page = 1, type = undefined) {
         if (isNaN(Number(page)) || Number(page) < 1) {
             return new Error("Page harus angka")
         }
@@ -18,10 +18,9 @@ class RecordService {
                 filteredType = VALID_RECORD_TYPE_SUPER_ADMIN.includes(type) ? type : undefined
                 break;
         }
-        console.log({ type, filteredType });
         const [records, counts] = await Promise.all([
-            RecordModification.all(Number(page), filteredType),
-            RecordModification.count(filteredType),
+            RecordModification.all(search, Number(page), filteredType),
+            RecordModification.count(search, filteredType),
         ]);
         const pagination = paginate(page, records.length, counts)
         return { records, pagination }

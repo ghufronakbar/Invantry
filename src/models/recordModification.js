@@ -70,18 +70,47 @@ class RecordModification {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
     }
 
-    static async all(page = 1, type = undefined) {
+    static async banUser(admin, name, email) {
+        return await prisma.recordModification.create({
+            data: {
+                desc: `${admin} menonaktifkan akun ${name} (${email})`,
+                type: "ACCOUNT_BANNED"
+            }
+        })
+    }
+
+    static async restoreUser(admin, name, email) {
+        return await prisma.recordModification.create({
+            data: {
+                desc: `${admin} mengaktifkan akun ${name} (${email})`,
+                type: "ACCOUNT_RESTORED"
+            }
+        })
+    }
+
+    static async all(search = "", page = 1, type = undefined) {
         return await prisma.recordModification.findMany({
             orderBy: {
                 createdAt: 'desc'
             },
             take: TAKE,
             skip: (page - 1) * TAKE,
-            where: type ? {
-                type: {
-                    equals: type
-                }
-            } : {}
+            where: {
+                AND: [
+                    {
+                        desc: {
+                            contains: search,
+                            mode: 'insensitive'
+                        }
+                    },
+                    type ? {
+                        type: {
+                            equals: type,
+                            mode: 'insensitive'
+                        }
+                    } : {}
+                ]
+            }
         })
     }
 
@@ -90,11 +119,22 @@ class RecordModification {
             orderBy: {
                 createdAt: 'desc'
             },
-            where: type ? {
-                type: {
-                    equals: type
-                }
-            } : {}
+            where: {
+                AND: [
+                    {
+                        desc: {
+                            contains: search,
+                            mode: 'insensitive'
+                        }
+                    },
+                    type ? {
+                        type: {
+                            equals: type,
+                            mode: 'insensitive'
+                        }
+                    } : {}
+                ]
+            }
         })
     }
 

@@ -31,7 +31,7 @@ class UserController {
 
     static async setActive(req, res) {
         try {
-            const service = await UserService.setActive(req.params.id);
+            const service = await UserService.setActive(req?.decoded?.id, req.params.id);
             if (service instanceof Error) {
                 if (service.message === "404") return res.status(404).json(Response.notFound());
                 return res.status(400).json(Response.invalid(service.message));

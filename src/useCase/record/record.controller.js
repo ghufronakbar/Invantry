@@ -4,7 +4,7 @@ import RecordService from "./record.service.js";
 class RecordController {
     static async all(req, res) {
         try {
-            const service = await RecordService.all(req?.decoded?.role, req.query.page || 1, req.query.type);
+            const service = await RecordService.all(req?.decoded?.role, req.query.search || "", req.query.page || 1, req.query.type);
             if (service instanceof Error) {
                 return res.status(400).json(Response.invalid(service.message));
             }

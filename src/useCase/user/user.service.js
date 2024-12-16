@@ -2,9 +2,6 @@ import paginate from "../../helper/paginate.js";
 import RecordModification from "../../models/recordModification.js";
 import User from "../../models/user.js";
 
-const VALID_RECORD_TYPE_ADMIN = ["IN_TRANSACTION", "OUT_TRANSACTION", "CREATE_PRODUCT", "EDIT_PRODUCT", "DELETE_PRODUCT"];
-const VALID_RECORD_TYPE_SUPER_ADMIN = [...VALID_RECORD_TYPE_ADMIN, "REGISTER", "ACCOUNT_CONFIRMED"];
-
 class UserService {
     static async all(search = "", page = 1) {
         if (isNaN(Number(page)) || Number(page) < 1) {
@@ -24,11 +21,20 @@ class UserService {
         return user
     }
 
-    static async setActive(id) {
-        const user = await User.byId(id)
+    static async setActive(userId, id) {
+        const [user, curUser] = await Promise.all([
+            User.byId(id),
+            User.byId(userId)
+        ]);
         if (!user) return new Error("404")
+        if (!curUser) return new Error("404")
         if (user.role === "SUPER_ADMIN") {
             return new Error("Tidak dapat menonaktifkan akun super admin")
+        }
+        if (user.isActived === true) {
+            RecordModification.banUser(curUser.name, user.name, user.email)
+        } else {
+            RecordModification.restoreUser(curUser.name, user.name, user.email)
         }
         const updated = await User.setActive(id, !user.isActived)
         return updated

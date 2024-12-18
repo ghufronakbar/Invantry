@@ -93,6 +93,10 @@ class User {
         return await prisma.user.update({ where: { id }, data: { isActived } })
     }
 
+    static async confirm(id) {
+        return await prisma.user.update({ where: { id }, data: { isActived: true, isConfirmed: true } })
+    }
+
     static async edit(id, data) {
         return await prisma.user.update({
             where: {

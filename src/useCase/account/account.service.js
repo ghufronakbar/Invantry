@@ -175,7 +175,7 @@ class AccountService {
                 await Promise.all([
                     User.updatePassword(user.id, password),
                     sendEmail(user.email, "CONFIRM_ACCOUNT", "", user.name, randomPassword),
-                    User.setActive(user.id)
+                    User.confirm(user.id)
                 ])
                 RecordModification.accountConfirmed(user.name, user.email)
                 return "Pengguna berhasil terkonfirmasi, cek email untuk login"

@@ -240,7 +240,7 @@ class Transaction {
         })
     }
 
-    static async byProductId(id) {
+    static async byProductId(id, from, to) {
         return await prisma.transaction.findMany({
             select: {
                 amount: true,
@@ -259,7 +259,17 @@ class Transaction {
                 }
             },
             where: {
-                productId: id
+                AND: [
+                    {
+                        productId: id
+                    },
+                    {
+                        createdAt: {
+                            gte: new Date(from),
+                            lte: new Date(to)
+                        }
+                    }
+                ]
             },
             orderBy: {
                 createdAt: 'asc'

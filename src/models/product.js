@@ -153,17 +153,19 @@ class Product {
         })
     }
 
-    static async byId(id) {
+    static async byId(id,) {
+        const where = {
+            id,
+        }
         return await prisma.product.findUnique({
-            where: {
-                id
-            },
+            where,
             include: {
                 category: true,
                 transactions: true
             }
         })
     }
+
 }
 
 export default Product

@@ -85,10 +85,26 @@ class ReportService {
         return { excelBuffer, fileName };
     }
 
-    static async byProductId(id) {
+    static async byProductId(id, dateStart, dateEnd) {
+        let dateStarted = new Date("2000-01-01");
+        let dateEnded = new Date();
+        dateEnded.setMonth(dateEnded.getMonth() + 1);
+
+        if (isNaN(Date.parse(dateStart))) {
+            dateStarted = new Date("2000-01-01");
+        } else {
+            dateStarted = new Date(dateStart);
+        }
+        if (isNaN(Date.parse(dateEnd))) {
+            dateEnded = new Date();
+            dateEnded.setMonth(dateEnded.getMonth() + 1);
+        } else {
+            dateEnded = new Date(dateEnd);
+        }
+
         const [product, transactions] = await Promise.all([
             Product.byId(id),
-            Transaction.byProductId(id)
+            Transaction.byProductId(id, dateStarted, dateEnded)
         ]);
 
         if (!product) {
